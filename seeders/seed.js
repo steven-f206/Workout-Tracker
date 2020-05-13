@@ -2,10 +2,6 @@ let mongoose = require("mongoose");
 let db = require("../models");
 require('dotenv/config');
 
-mongoose.connect('process.env.DB_CONNECTION',
-  { useUnifiedTopology: true, useNewUrlParser: true }, () =>
-  console.log("Connected to DB")
-);
 
 mongoose.connect("mongodb://localhost/workout", {
   useNewUrlParser: true,

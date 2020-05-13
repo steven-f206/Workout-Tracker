@@ -5,9 +5,11 @@ const path = require('path');
 // Database Connection Request
 require('dotenv/config');
 const connectDB = require("./config/connectDB.js");
+
 //Bring in models
 const db = require("./models");
 // Create an instance of the express app.
+
 let app = express();
 // Added so body parser can handle post requests
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,62 +48,81 @@ app.get("/api/workouts", (req, res) => {
         });
 });
 
-    app.get("/api/workouts/range", (req, res) => {
-        db.Workout.find({})
-            .then(dbWorkout => {
-                res.json(dbWorkout);
-            })
-            .catch(err => {
-                res.json(err);
-            });
-    });
+app.get("/api/workouts/range", (req, res) => {
+    db.Workout.find({})
+        .then(dbWorkout => {
+            res.json(dbWorkout);
+        })
+        .catch(err => {
+            res.json(err);
+        });
+});
 
-        //PUT REQUESTS
-        app.put("/api/workouts/:id", (req, res) => {
 
-            let urlData = req.params;
-            let data = req.body;
-            db.Workout.update({ _id: urlData.id }, {
-                $push: {
-                    exercises: [
-                        {
-                            "type": data.type,
-                            "name": data.name,
-                            "duration": data.duration,
-                            "weight": data.weight,
-                            "reps": data.reps,
-                            "sets": data.sets
-                        }
-                    ]
+
+//PUT REQUESTS
+
+app.put("/api/workouts/:id", (req, res) => {
+
+    let urlData = req.params;
+    let data = req.body;
+    db.Workout.update({ _id: urlData.id }, {
+        $push: {
+            exercises: [
+                {
+                    "type": data.type,
+                    "name": data.name,
+                    "duration": data.duration,
+                    "weight": data.weight,
+                    "reps": data.reps,
+                    "sets": data.sets
                 }
-            }).then(dbUpdate => {
-                res.json(dbUpdate);
-            })
-                .catch(err => {
-                    res.json(err);
-                });
+            ]
+        }
+    }).then(dbUpdate => {
+        res.json(dbUpdate);
+    })
+        .catch(err => {
+            res.json(err);
+        });
 
-            });
+});
 
-                //POST REQUESTS
-                /*
-                app.post("/api/workouts", (req,res) => {
-                  db.Workout.find({})
-                  .then(dbWorkout => {
-                    res.json(dbWorkout);
-                  })
-                  .catch(err => {
-                    res.json(err);
-                  });
-                });
-                */
+//POST REQUESTS
+
+app.post("/api/workouts", (req, res) => {
+    let data = req.body;
+
+    db.Workout.create({
+        day: new Date().setDate(new Date().getDate()),
+        exercises: [
+            {
+                "type": data.type,
+                "name": data.name,
+                "duration": data.duration,
+                "weight": data.weight,
+                "reps": data.reps,
+                "sets": data.sets
+            }
+        ]
+    }).then(dbUpdate => {
+        res.json(dbUpdate);
+    })
+        .catch(err => {
+            res.json(err);
+        });
+
+
+    /*  console.log(req.body);
+      res.sendStatus(200);*/
+});
 
 
 
-                /******************************* Connect to db  ****************************/
-                connectDB()
-                // Start our server so that it can begin listening to client requests.
-                app.listen(PORT, function () {
-                    // Log (server-side) when our server has started
-                    console.log("Server listening on: http://localhost:" + PORT);
-                });
+/******************************* Connect to db  ****************************/
+connectDB()
+// Start our server so that it can begin listening to client requests.
+app.listen(PORT, function () {
+    // Log (server-side) when our server has started
+    console.log("Server listening on: http://localhost:" + PORT);
+});
