@@ -38,6 +38,8 @@ app.get("/stats", (req, res) => {
 
 
 //GET REQUESTS
+
+
 app.get("/api/workouts", (req, res) => {
     db.Workout.find({}).sort({ day: -1 }).limit(1)
         .then(dbWorkout => {
@@ -66,13 +68,14 @@ app.put("/api/workouts/:id", (req, res) => {
 
     let urlData = req.params;
     let data = req.body;
-    db.Workout.update({ _id: urlData.id }, {
+    db.Workout.updateOne({ _id: urlData.id }, {
         $push: {
             exercises: [
                 {
                     "type": data.type,
                     "name": data.name,
                     "duration": data.duration,
+                    "distance": data.distance,
                     "weight": data.weight,
                     "reps": data.reps,
                     "sets": data.sets
@@ -94,17 +97,8 @@ app.post("/api/workouts", (req, res) => {
     let data = req.body;
 
     db.Workout.create({
-        day: new Date().setDate(new Date().getDate()),
-        exercises: [
-            {
-                "type": data.type,
-                "name": data.name,
-                "duration": data.duration,
-                "weight": data.weight,
-                "reps": data.reps,
-                "sets": data.sets
-            }
-        ]
+        
+        day: new Date().setDate(new Date().getDate())
     }).then(dbUpdate => {
         res.json(dbUpdate);
     })
