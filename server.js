@@ -8,8 +8,8 @@ const connectDB = require("./config/connectDB.js");
 
 //Bring in models
 const db = require("./models");
-// Create an instance of the express app.
 
+// Create an instance of the express app.
 let app = express();
 // Added so body parser can handle post requests
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -91,13 +91,14 @@ app.put("/api/workouts/:id", (req, res) => {
 
 });
 
+
 //POST REQUESTS
 
 app.post("/api/workouts", (req, res) => {
+
     let data = req.body;
 
     db.Workout.create({
-
         day: new Date().setDate(new Date().getDate())
     }).then(dbUpdate => {
         res.json(dbUpdate);
@@ -105,13 +106,14 @@ app.post("/api/workouts", (req, res) => {
         .catch(err => {
             res.json(err);
         });
-
 });
+
 
 
 
 /******************************* Connect to db  ****************************/
 connectDB()
+
 // Start our server so that it can begin listening to client requests.
 app.listen(PORT, function () {
     // Log (server-side) when our server has started
