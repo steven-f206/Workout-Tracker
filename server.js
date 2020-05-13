@@ -97,7 +97,7 @@ app.post("/api/workouts", (req, res) => {
     let data = req.body;
 
     db.Workout.create({
-        
+
         day: new Date().setDate(new Date().getDate())
     }).then(dbUpdate => {
         res.json(dbUpdate);
@@ -106,9 +106,6 @@ app.post("/api/workouts", (req, res) => {
             res.json(err);
         });
 
-
-    /*  console.log(req.body);
-      res.sendStatus(200);*/
 });
 
 
